@@ -2,12 +2,12 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Sun Mar 11 23:45:23 2018
+;; Created Mon Mar 12 18:30:52 2018
 ;; Desktop file format version 208
 ;; Emacs version 25.3.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (23205 16643 486135 249000) (desktop . "208") "chris@isis" nil nil ((((font-backend xft x) (font . "-IPA -IPA’¥´’¥·’¥Ã’¥¯-normal-normal-normal-*-29-*-*-*-d-0-iso10646-1") (font-parameter) (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . left) (horizontal-scroll-bars) (foreground-color . "black") (background-color . "white") (mouse-color . "#2c2c2c") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground . "#2c2c2c") (scroll-bar-background . "#dcdcdc") (menu-bar-lines . 1) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 16) (scroll-bar-height . 0) (alpha) (fullscreen . maximized) (display-type . color) (background-mode . light) (cursor-color . "#2c2c2c") (sticky) (environment) (frameset--id . "2C09-429C-A3A6-B756") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (display . ":0") (explicit-name) (visibility . t) (height . 41) (width . 168) (left . 0) (top . 36)) ((min-height . 4) (min-width . 10) (min-height-ignore . 3) (min-width-ignore . 5) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 120) (min-pixel-width . 150) (min-pixel-height-ignore . 90) (min-pixel-width-ignore . 75) (min-pixel-height-safe . 30) (min-pixel-width-safe . 30)) leaf (pixel-width . 2558) (pixel-height . 1221) (total-width . 170) (total-height . 40) (normal-height . 1.0) (normal-width . 1.0) (buffer "subarud.go" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 2 t nil 0 nil) (vscroll . 0) (dedicated) (point . 351) (start . 1))))])
+(setq desktop-saved-frameset [frameset 1 (23206 18636 884680 855000) (desktop . "208") "chris@xeon" nil nil ((((font-backend xft x) (font . "-IPA -IPA’¥´’¥·’¥Ã’¥¯-normal-normal-normal-*-41-*-*-*-d-0-iso10646-1") (font-parameter) (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . left) (horizontal-scroll-bars) (foreground-color . "#2E3436") (background-color . "#EDEDED") (mouse-color . "#000000") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground . "#2e3436") (scroll-bar-background . "#e8e8e7") (menu-bar-lines . 1) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 17) (scroll-bar-height . 0) (alpha) (fullscreen . maximized) (display-type . color) (background-mode . light) (cursor-color . "#00BBFF") (sticky) (environment) (frameset--id . "B4AF-C5B4-69CE-131B") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (visibility . t) (display . ":0") (explicit-name) (height . 31) (width . 120) (left . 0) (top . 1)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 168) (min-pixel-width . 210) (min-pixel-height-ignore . 84) (min-pixel-width-ignore . 84) (min-pixel-height-safe . 42) (min-pixel-width-safe . 42)) leaf (pixel-width . 2558) (pixel-height . 1263) (total-width . 121) (total-height . 30) (normal-height . 1.0) (normal-width . 1.0) (buffer "subarud.go" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 1 t nil 0 nil) (vscroll . 0) (dedicated) (point . 693) (start . 1))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
@@ -18,14 +18,14 @@
 
 ;; Buffer section -- buffers listed in same order as in buffer list:
 (desktop-create-buffer 208
-  "/home/chris/go/src/github.com/jvo203/SubaruWebQL/subarud.go"
+  "/home/chris/go/src/SubaruWebQL/subarud.go"
   "subarud.go"
   'go-mode
   nil
-  351
-  '(351 nil)
+  693
+  '(825 nil)
   nil
   nil
   '((indent-tabs-mode . t) (buffer-file-coding-system . undecided-unix))
-  '((mark-ring (309 252 351 252 254 252 252 201 89 14 149 392 129 28 27 147))))
+  '((mark-ring (822 718 617 524 765 666 565 695 594 501 736 636 539 443 36 885))))
 
