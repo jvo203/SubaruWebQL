@@ -66,6 +66,10 @@ var datasets = struct{
 
 var easy *curl.CURL
 
+func parseXML(subaru *SubaruDataset, fp *os.File) {
+	xml.NewDecoder(fp)
+}
+
 func subaru_votable(subaru *SubaruDataset, votable string) {
 	//get a votable
 	filename := VOTABLECACHE + "/" + subaru.dataId + ".xml"
@@ -112,15 +116,18 @@ func subaru_votable(subaru *SubaruDataset, votable string) {
 			panic(err)
 		} else {
 			os.Rename(filename+".tmp", filename)
-			xmlfile, err = os.Open(filename)
+			xmlfile, err := os.Open(filename)
+			defer xmlfile.Close()
 
 			if(err != nil) {
 				panic(err)
 			}
-		}
-	}
 
-	xml.NewDecoder(xmlfile)
+			parseXML(subaru, xmlfile)
+		}
+	} else {
+		parseXML(subaru, xmlfile)
+	}
 }
 
 func launch_subaru(dataId, url, votable string) SubaruDataset {

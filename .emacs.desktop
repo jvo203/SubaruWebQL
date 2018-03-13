@@ -2,12 +2,12 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Tue Mar 13 17:00:57 2018
+;; Created Tue Mar 13 23:32:59 2018
 ;; Desktop file format version 208
 ;; Emacs version 25.3.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (23207 34105 970380 93000) (desktop . "208") "chris@isis" nil nil ((((font-backend xft x) (font . "-IPA -IPA’¥´’¥·’¥Ã’¥¯-normal-normal-normal-*-29-*-*-*-d-0-iso10646-1") (font-parameter) (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . left) (horizontal-scroll-bars) (foreground-color . "black") (background-color . "white") (mouse-color . "#000000") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground . "#000000") (scroll-bar-background . "#dcdad5") (menu-bar-lines . 1) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 16) (scroll-bar-height . 0) (alpha) (fullscreen . maximized) (display-type . color) (background-mode . light) (cursor-color . "#000000") (sticky) (environment) (frameset--id . "F4C3-1C10-0B79-70D0") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (display . ":0") (explicit-name) (visibility . t) (height . 41) (width . 168) (left . 0) (top . 36)) ((min-height . 4) (min-width . 10) (min-height-ignore . 3) (min-width-ignore . 5) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 120) (min-pixel-width . 150) (min-pixel-height-ignore . 90) (min-pixel-width-ignore . 75) (min-pixel-height-safe . 30) (min-pixel-width-safe . 30)) leaf (pixel-width . 2558) (pixel-height . 1221) (total-width . 170) (total-height . 40) (normal-height . 1.0) (normal-width . 1.0) (buffer "subarud.go" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 2 t nil 0 nil) (vscroll . 0) (dedicated) (point . 1505) (start . 951))))])
+(setq desktop-saved-frameset [frameset 1 (23207 57627 856051 468000) (desktop . "208") "chris@isis" nil nil ((((font-backend xft x) (font . "-IPA -IPA’¥´’¥·’¥Ã’¥¯-normal-normal-normal-*-29-*-*-*-d-0-iso10646-1") (font-parameter) (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . left) (horizontal-scroll-bars) (foreground-color . "black") (background-color . "white") (mouse-color . "#000000") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground . "#000000") (scroll-bar-background . "#dcdad5") (menu-bar-lines . 1) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 16) (scroll-bar-height . 0) (alpha) (fullscreen . maximized) (display-type . color) (background-mode . light) (cursor-color . "#000000") (sticky) (environment) (frameset--id . "F4C3-1C10-0B79-70D0") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (display . ":0") (explicit-name) (visibility . t) (height . 41) (width . 168) (left . 0) (top . 36)) ((min-height . 4) (min-width . 10) (min-height-ignore . 3) (min-width-ignore . 5) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 120) (min-pixel-width . 150) (min-pixel-height-ignore . 90) (min-pixel-width-ignore . 75) (min-pixel-height-safe . 30) (min-pixel-width-safe . 30)) leaf (pixel-width . 2558) (pixel-height . 1221) (total-width . 170) (total-height . 40) (normal-height . 1.0) (normal-width . 1.0) (buffer "subarud.go" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 2 t nil 0 nil) (vscroll . 0) (dedicated) (point . 2123) (start . 1994))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
@@ -22,10 +22,10 @@
   "subarud.go"
   'go-mode
   nil
-  1505
-  '(1508 nil)
+  2123
+  '(2481 nil)
   nil
   nil
   '((indent-tabs-mode . t) (buffer-file-coding-system . undecided-unix))
-  '((mark-ring (1508 1679 1657 164 1685 4107 4107 1375 1711 1460 1519 1416 3434 2181 2339 1378))))
+  '((mark-ring (2521 1147 2521 1108 1189 1094 2414 1340 1583 1583 1754 1732 164 1760 4250 2512))))
 
