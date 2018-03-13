@@ -86,9 +86,9 @@ func subaru_votable(subaru *SubaruDataset, votable string) {
 		if err := easy.Perform(); err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
-	} else {
-		xml.NewDecoder(xmlfile)
 	}
+
+	xml.NewDecoder(xmlfile)
 }
 
 func launch_subaru(dataId, url, votable string) SubaruDataset {
