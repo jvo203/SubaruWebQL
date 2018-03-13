@@ -13,6 +13,7 @@ import (
 	curl "github.com/andelf/go-curl"	
 )
 
+var VOTABLESERVER = "jvox.vo.nao.ac.jp"
 var VOTABLECACHE = "VOTABLECACHE"
 
 type SubaruDataset struct {	
@@ -69,22 +70,53 @@ func subaru_votable(subaru *SubaruDataset, votable string) {
 	//get a votable
 	filename := VOTABLECACHE + "/" + subaru.dataId + ".xml"
 	xmlfile, err := os.Open(filename)
+	defer xmlfile.Close()
 
 	if err != nil {
-		
-		easy.Setopt(curl.OPT_URL, votable)
+
+		tmpfile, err := os.Create(filename+".tmp")
+		defer tmpfile.Close()
+
+		if(err != nil) {
+			panic(err)
+		}
+
+		if len(strings.TrimSpace(votable)) > 0 {
+			easy.Setopt(curl.OPT_URL, votable)
+		} else {			
+			url := "http://" + VOTABLESERVER + ":8060/skynode/do/tap/spcam/sync?REQUEST=queryData&QUERY=SELECT%20*%20FROM%20image_nocut%20WHERE%20data_id%20='" + subaru.dataId + "'"
+			fmt.Printf("%s\n",url)
+			easy.Setopt(curl.OPT_URL, url)
+		}
 
 		// make a callback function
 		fooTest := func (buf []byte, userdata interface{}) bool {
 			println("DEBUG: size=>", len(buf))
 			println("DEBUG: content=>", string(buf))
+
+			file := userdata.(*os.File)
+			
+			// write a chunk		
+			if _, err := file.Write(buf) ; err != nil {
+				panic(err)
+			}
+			
 			return true
 		}
 
 		easy.Setopt(curl.OPT_WRITEFUNCTION, fooTest)
+		easy.Setopt(curl.OPT_WRITEDATA, tmpfile)
 
 		if err := easy.Perform(); err != nil {
 			fmt.Printf("ERROR: %v\n", err)
+			panic(err)
+		} else {
+			os.Rename(filename+".tmp", filename)
+			xmlfile, err = os.Open(filename)
+
+			if(err != nil) {
+				panic(err)
+			}
 		}
 	}
 
