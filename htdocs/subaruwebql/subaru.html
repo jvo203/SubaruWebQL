@@ -22,14 +22,7 @@
 	      <div class="col-sm-10">
 		<input type="text" class="form-control" id="dataid_akari" value="AKAI013000676">
 	      </div>
-	    </div>
-	    
-	    <div class="form-group">	      
-	      <label class="control-label col-sm-1" for="url_akari">URL:</label>
-	      <div class="col-sm-10">
-		<input type="text" class="form-control" id="url_akari" value="http://jvo.nao.ac.jp/skynode/getDataForAkari.do?db=akari&table=fis_image_v1&dataId=input">
-	      </div>
-	    </div>
+	    </div>	    	    
 
 	    <div class="form-group">	      
 	      <label class="control-label col-sm-1" for="votable_akari">VOTable:</label>
@@ -40,7 +33,7 @@
 	    
 	    <div class="form-group">
     	      <div class="col-sm-10">
-		<button type="submit" class="btn btn-default" onclick="view_subaru_URL('dataid_akari','url_akari','votable_akari')">Submit</button>
+		<button type="submit" class="btn btn-default" onclick="view_subaru_votable('dataid_akari','votable_akari')">Submit</button>
 	      </div>
 	    </div>
 	  </div>
@@ -58,14 +51,7 @@
 	      <div class="col-sm-10">
 		<input type="text" class="form-control" id="dataid_moircs" value="MCSM0853851604C1300">
 	      </div>
-	    </div>
-	    
-	    <div class="form-group">	      
-	      <label class="control-label col-sm-1" for="url_moircs">URL:</label>
-	      <div class="col-sm-10">
-		<input type="text" class="form-control" id="url_moircs" value="http://jvo.nao.ac.jp/skynode/requestImage.do?db=moircs&table=image_nocut&dataId=input">
-	      </div>
-	    </div>
+	    </div>	    	    
 
 	    <div class="form-group">	      
 	      <label class="control-label col-sm-1" for="votable_moircs">VOTable:</label>
@@ -76,7 +62,7 @@
 	    
 	    <div class="form-group">
     	      <div class="col-sm-10">
-		<button type="submit" class="btn btn-default" onclick="view_subaru_URL('dataid_moircs','url_moircs','votable_moircs')">Submit</button>
+		<button type="submit" class="btn btn-default" onclick="view_subaru_votable('dataid_moircs','votable_moircs')">Submit</button>
 	      </div>
 	    </div>
 	  </div>
@@ -98,7 +84,7 @@
       </div>     
       
       <H4>
-	TEST PAGE VERSION 2018-03-09
+	TEST PAGE VERSION 2018-03-14
       </H4>
     </div>
     
@@ -117,19 +103,17 @@
       else alert("empty dataId string!");
       }
 
-      function view_subaru_URL(data_id, url_id, vo_id){
-      var dataId = document.getElementById(data_id).value.trim();
-      var URL = document.getElementById(url_id).value.trim();
+      function view_subaru_votable(data_id, vo_id){
+      var dataId = document.getElementById(data_id).value.trim();      
       var VOTable = document.getElementById(vo_id).value.trim();
       
-      if(dataId != "" && URL != "" && VOTable != "")
-      {
-      URL = URL.replace("input", dataId) ;
+      if(dataId != "" && VOTable != "")
+      {      
       VOTable = VOTable.replace("input", dataId) ;
       
       var url = null ;
       
-      url = "/subaruwebql/SubaruWebQL.html?url=" + encodeURIComponent(URL) + "&votable=" + encodeURIComponent(VOTable) + "&dataId=" + encodeURIComponent(dataId);
+      url = "/subaruwebql/SubaruWebQL.html?votable=" + encodeURIComponent(VOTable) + "&dataId=" + encodeURIComponent(dataId);
       
       window.location.href = url;
       }
