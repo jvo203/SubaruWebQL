@@ -162,68 +162,58 @@ func parseXMLVOTable(subaru *SubaruDataset, fp *os.File) {
 		if n.XMLName.Local == "TD" {
 			subaru.current_pos++
 
-			if(subaru.current_pos == subaru.process_id_pos) {
+			switch subaru.current_pos {			
+			case subaru.process_id_pos:
 				subaru.processId = string(n.Content)
-			}
-
-			if(subaru.current_pos == subaru.title_pos) {
+				
+			case subaru.title_pos:
 				subaru.title = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.date_obs_pos) {
+			case subaru.date_obs_pos:
 				subaru.date_obs = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.objects_pos) {
+			case subaru.objects_pos:
 				subaru.objects = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.band_name_pos) {
+			case subaru.band_name_pos:
 				subaru.band_name = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.band_ref_pos) {
+			case subaru.band_ref_pos:
 				subaru.band_ref = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.band_hi_pos) {
+			case subaru.band_hi_pos:
 				subaru.band_hi = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.band_lo_pos) {
+			case subaru.band_lo_pos:
 				subaru.band_lo = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.band_unit_pos) {
+			case subaru.band_unit_pos:
 				subaru.band_unit = string(n.Content)
 
 				if(subaru.band_unit == "A") {
 					subaru.band_unit = "&#8491;"
 				}
-
+				
 				if(subaru.band_unit == "um") {
 					subaru.band_unit = "&#181;m"
-				}
-			}
+				}			
 
-			if(subaru.current_pos == subaru.ra_pos) {
+			case subaru.ra_pos:
 				subaru.ra = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.dec_pos) {
+			case subaru.dec_pos:
 				subaru.dec = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.file_size_pos) {
+			case subaru.file_size_pos:
 				subaru.file_size = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.file_path_pos) {
+			case subaru.file_path_pos:
 				subaru.file_path = string(n.Content)
-			}
 
-			if(subaru.current_pos == subaru.file_url_pos) {
+			case subaru.file_url_pos:
 				subaru.file_url = string(n.Content)
+
+			default:
 			}
 		}//end-of-"TD"
 		
