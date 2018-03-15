@@ -2,16 +2,16 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Wed Mar 14 17:43:55 2018
+;; Created Thu Mar 15 17:36:33 2018
 ;; Desktop file format version 208
 ;; Emacs version 25.3.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (23208 57547 956283 765000) (desktop . "208") "chris@xeon" nil nil ((((font-backend xft x) (font . "-IPA -IPA’¥´’¥·’¥Ã’¥¯-normal-normal-normal-*-62-*-*-*-d-0-iso10646-1") (font-parameter) (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . left) (horizontal-scroll-bars) (foreground-color . "#2E3436") (background-color . "#EDEDED") (mouse-color . "#000000") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground . "#2e3436") (scroll-bar-background . "#e8e8e7") (menu-bar-lines . 1) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 25) (scroll-bar-height . 0) (alpha) (fullscreen . maximized) (display-type . color) (background-mode . light) (cursor-color . "#00BBFF") (sticky) (environment) (frameset--id . "E894-8460-7762-05C5") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (display . ":0") (explicit-name) (visibility . t) (height . 31) (width . 122) (left . 3840) (top . 1)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 252) (min-pixel-width . 310) (min-pixel-height-ignore . 126) (min-pixel-width-ignore . 124) (min-pixel-height-safe . 63) (min-pixel-width-safe . 62)) leaf (pixel-width . 3838) (pixel-height . 1896) (total-width . 123) (total-height . 30) (normal-height . 1.0) (normal-width . 1.0) (buffer "subarud.go" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 1 t nil 0 nil) (vscroll . 0) (dedicated) (point . 4318) (start . 4318))))])
+(setq desktop-saved-frameset [frameset 1 (23210 12433 219451 975000) (desktop . "208") "chris@xeon" nil nil ((((font-backend xft x) (font . "-IPA -IPA’¥´’¥·’¥Ã’¥¯-normal-normal-normal-*-62-*-*-*-d-0-iso10646-1") (font-parameter) (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . left) (horizontal-scroll-bars) (foreground-color . "#2E3436") (background-color . "#EDEDED") (mouse-color . "#000000") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground . "#2e3436") (scroll-bar-background . "#e8e8e7") (menu-bar-lines . 1) (tool-bar-lines . 1) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 25) (scroll-bar-height . 0) (alpha) (fullscreen . maximized) (display-type . color) (background-mode . light) (cursor-color . "#00BBFF") (sticky) (environment) (frameset--id . "E894-8460-7762-05C5") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (display . ":0") (explicit-name) (visibility . t) (height . 31) (width . 122) (left . 3840) (top . 1)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 252) (min-pixel-width . 310) (min-pixel-height-ignore . 126) (min-pixel-width-ignore . 124) (min-pixel-height-safe . 63) (min-pixel-width-safe . 62)) leaf (pixel-width . 3838) (pixel-height . 1919) (total-width . 124) (total-height . 30) (normal-height . 1.0) (normal-width . 1.0) (buffer "subarud.go" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 1 t nil 0 nil) (vscroll . 0) (dedicated) (point . 10241) (start . 9637))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
-(setq search-ring '(".trim" "fitsca" "parse" "\"text\"" "orbi" "font" "url" "URL" "bar" "favi" "execute_su" "current_pos"))
+(setq search-ring '("panic" "bitpi" "bitpix" "ssca" "bitp" "read_" "+v" "float" "contains" "bytes" "read_" "fits.size" "progressfits" "progress" "fits.size" "fits"))
 (setq regexp-search-ring nil)
 (setq register-alist nil)
 (setq file-name-history '("/home/chris/go/src/SubaruWebQL/htdocs/subaruwebql/subaru.html" "/home/chris/go/src/SubaruWebQL/htdocs/subaruwebql/subaruwebql.css" "/home/chris/go/src/SubaruWebQL/htdocs/subaruwebql/subaruwebql.js"))
@@ -22,12 +22,12 @@
   "subarud.go"
   'go-mode
   '(visual-line-mode)
-  4318
-  '(6606 nil)
+  10241
+  '(9845 nil)
   nil
   nil
   '((indent-tabs-mode . t) (buffer-file-coding-system . undecided-unix) (truncate-lines))
-  '((mark-ring (7608 327 319 285 6262 1620 74 7455 7414 6214 7037 5832 5832 5832 6710 3658))))
+  '((mark-ring (9739 9672 12813 9617 9528 9449 9422 9449 9295 9174 9056 8938 8938 8819 8581 9974))))
 
 (desktop-create-buffer 208
   "/home/chris/go/src/SubaruWebQL/htdocs/subaruwebql/subaruwebql.js"

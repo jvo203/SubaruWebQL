@@ -2,13 +2,18 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"math"
+	"os"	
+	"io/ioutil"
 	"strings"
 	"errors"
 	"bytes"
 	"sync"
 	"time"
+	"html"
+	"strconv"
 	"encoding/xml"
+	"compress/gzip"
 	"github.com/kataras/iris"
 	curl "github.com/andelf/go-curl"	
 )
@@ -17,9 +22,53 @@ import (
 var SERVER_STRING = "SubaruWebQL v1.1.0"
 var VERSION_STRING = "SV2018-03-14.0"
 
+const NOTIFICATION_CHUNK = 10*1024*1024
+const FITS_HEADER_LENGTH = 2880
+const FITS_LINE_LENGTH = 80
+
 var VOTABLESERVER = "jvox.vo.nao.ac.jp"
 var VOTABLECACHE = "VOTABLECACHE"
 var FITSCACHE = "FITSCACHE"
+
+type downloadChunk struct {
+	fp *os.File
+	previous_size int64
+	size int64
+	progress int
+	subaru *SubaruDataset
+	//zlib
+	gzip bool
+	buf bytes.Buffer
+}
+
+const NBINS = 1024
+
+type FITS struct {
+	BITPIX int
+	NAXIS int
+	width int
+	height int
+	data []float32
+	IGNRVAL float32
+	CRVAL1 float32
+	CDELT1 float32
+	CRPIX1 float32
+	CRVAL2 float32
+	CDELT2 float32
+	CRPIX2 float32
+	CD1_1 float32
+	CD1_2 float32
+	CD2_1 float32
+	CD2_2 float32
+	min float32
+	max float32
+	hist [NBINS]int
+	median float32
+	mad float32
+	black float32
+	sensitivity float32
+	rgb []byte
+}
 
 type SubaruDataset struct {	
 	dataId string
@@ -34,7 +83,7 @@ type SubaruDataset struct {
 	band_unit string
 	ra string
 	dec string
-	file_size string
+	file_size int64
 	file_path string
 	file_url string
 	current_pos int
@@ -55,6 +104,7 @@ type SubaruDataset struct {
 	file_url_pos int
 	timestamp time.Time
 	sync.RWMutex
+	fits FITS
 	/*
   sem_t sem_votable ;
   bool has_votable ;
@@ -70,6 +120,10 @@ var datasets = struct{
 }{subaru: make(map[string] SubaruDataset)}
 
 var easy *curl.CURL
+
+func round(f float64) float64 {
+    return math.Floor(f + .5)
+}
 
 type Node struct {
 	XMLName xml.Name
@@ -205,13 +259,17 @@ func parseXMLVOTable(subaru *SubaruDataset, fp *os.File) {
 				subaru.dec = string(n.Content)
 
 			case subaru.file_size_pos:
-				subaru.file_size = string(n.Content)
+				i64, err := strconv.ParseInt(string(n.Content), 10, 64)
+
+				if(err == nil) {
+					subaru.file_size = i64
+				}
 
 			case subaru.file_path_pos:
 				subaru.file_path = string(n.Content)
 
 			case subaru.file_url_pos:
-				subaru.file_url = string(n.Content)
+				subaru.file_url = html.UnescapeString(string(n.Content))
 
 			default:
 			}
@@ -265,7 +323,7 @@ func subaru_votable(subaru *SubaruDataset, votable string) {
 		easy.Setopt(curl.OPT_WRITEDATA, tmpfile)
 
 		if err := easy.Perform(); err != nil {
-			fmt.Printf("ERROR: %v\n", err)
+			fmt.Printf("ERROR: %+v\n", err)
 			panic(err)
 		} else {
 			os.Rename(filename+".tmp", filename)
@@ -284,11 +342,153 @@ func subaru_votable(subaru *SubaruDataset, votable string) {
 	}
 }
 
-func readFITS(subaru *SubaruDataset, fp *os.File) {
+func read_FITS_from_buffer(subaru *SubaruDataset, buffer *bytes.Buffer) {
+	fmt.Println("FITS buffer length:", buffer.Len())
 
+	//read the header first
+	hdrLine := make([]byte, FITS_LINE_LENGTH)
+	total := 0
+	fitsLen := buffer.Len()
+	hend := false	
+
+	for total < fitsLen && !hend {
+		count, _ := buffer.Read(hdrLine)
+		total += count
+
+		//fmt.Println("read", count, "bytes")
+		s := string(hdrLine)		
+		//fmt.Println(string(s))
+
+		if(strings.Contains(s, "END       ")) {
+			hend = true
+		}
+
+		if(strings.Contains(s, "BITPIX  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%d", &subaru.fits.BITPIX)
+		}
+
+		if(strings.Contains(s, "NAXIS   = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%d", &subaru.fits.NAXIS)
+		}
+
+		if(strings.Contains(s, "NAXIS1  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%d", &subaru.fits.width)
+		}
+
+		if(strings.Contains(s, "NAXIS2  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%d", &subaru.fits.height)
+		}
+
+		if(strings.Contains(s, "IGNRVAL = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.IGNRVAL)
+		}
+
+		if(strings.Contains(s, "CRVAL1  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CRVAL1)
+		}
+
+		if(strings.Contains(s, "CDELT1  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CDELT1)
+		}
+
+		if(strings.Contains(s, "CRPIX1  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CRPIX1)
+		}
+
+		if(strings.Contains(s, "CRVAL2  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CRVAL2)
+		}
+
+		if(strings.Contains(s, "CDELT2  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CDELT2)
+		}
+
+		if(strings.Contains(s, "CRPIX2  = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CRPIX2)
+		}
+
+		if(strings.Contains(s, "CD1_1   = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CD1_1)
+		}
+
+		if(strings.Contains(s, "CD1_2   = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CD1_2)
+		}
+
+		if(strings.Contains(s, "CD2_1   = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CD2_1)			
+		}
+
+		if(strings.Contains(s, "CD2_2   = ")) {
+			fmt.Println(s[10:])
+			fmt.Sscanf(s[10:], "%f", &subaru.fits.CD2_2)
+		}
+	}
+
+	rem := total % FITS_HEADER_LENGTH	
+	offset := (total - rem)
+	
+	if(rem > 0) {
+		offset += FITS_HEADER_LENGTH
+	}
+
+	fmt.Println("FITS HEADER LENGTH:", offset, "total:", total, "rem:", rem)	
+	fmt.Printf("%+v\n", subaru.fits)
+
+	if(subaru.fits.BITPIX != -32) {
+		panic(errors.New("UNSUPPORTED BITPIX"))
+	}
+
+	//FITS DATA BEGINS AT buffer.Bytes()[offset:]
+	//need to convert from BIG-ENDIAN to LITTLE-ENDIAN and []byte to float32
+	src := buffer.Bytes()[offset:]
+	fmt.Println("data length:", len(src))
+	//there is something wrong here, data length is insufficient
+
+	//first read the remaining part of the FITS HEADER in one go
+
+	//then buffer.Bytes() will point to the remaining unread data (FITS DATA + padding)
+
+	//I can see how/why Go is not efficient in computing applications
+
+	//it might be better to stick with C/C++ or use Rust
 }
 
-func subaru_fits(subaru *SubaruDataset) {	
+func read_FITS_from_file(subaru *SubaruDataset, fp *os.File) {
+	fmt.Println("reading FITS file for", subaru.dataId)
+
+	// get the file size
+	stat, err := fp.Stat()
+	if err != nil {
+		return
+	}
+
+	buf, err := ioutil.ReadAll(fp)
+
+	if(err != nil) {
+		panic(err)
+	} else {
+		fmt.Println("uncompressed size:", len(buf), "file size:", stat.Size())
+
+		read_FITS_from_buffer(subaru, bytes.NewBuffer(buf))
+	}
+}
+
+func subaru_fits_thread(subaru *SubaruDataset) {	
 	filename := FITSCACHE + "/" + subaru.dataId + ".fits"
 	
 	fitsfile, err := os.Open(filename)
@@ -305,41 +505,100 @@ func subaru_fits(subaru *SubaruDataset) {
 		fmt.Printf("subaru_fits_thread: %s\n", subaru.file_url)
 		easy.Setopt(curl.OPT_URL, subaru.file_url)
 
-		// make a callback function
-		writeFile := func (buf []byte, userdata interface{}) bool {
-			/*println("DEBUG: size=>", len(buf))
-			println("DEBUG: content=>", string(buf))*/
+		// make callback functions		
+		header_callback := func (buf []byte, userdata interface{}) bool {
+			/*println("HEADER: size=>", len(buf))*/
+			/*println("HEADER: content=>", string(buf))*/
 
-			file := userdata.(*os.File)
-			
-			// write a chunk		
-			if _, err := file.Write(buf) ; err != nil {
-				panic(err)
-			}
+			header := string(buf)
+			chunk := userdata.(*downloadChunk)			
+
+			if(strings.Contains(header, "gzip") || strings.Contains(header, ".fits.gz")) {
+				chunk.gzip = true
+			}			
 			
 			return true
 		}
+		
+		writeFile := func (buf []byte, userdata interface{}) bool {
+			//println("DEBUG: size=>", len(buf))
+			/*println("DEBUG: content=>", string(buf))*/
 
+			chunk := userdata.(*downloadChunk)						
+			//subaru := chunk.subaru			
+			file := chunk.fp			
+
+			//append buf to chunk.buf
+			chunk.buf.Write(buf)
+			
+			if(!chunk.gzip) {												
+				// write a chunk		
+				if _, err := file.Write(buf) ; err != nil {
+					panic(err)
+				}
+			}
+			
+			chunk.size += int64(len(buf))
+			chunk.progress = int(round(100.0 * float64(chunk.size) / float64(subaru.file_size)))
+			//fmt.Printf("%.0f%%\n",round(100.0 * float64(chunk.size) / float64(subaru.file_size)))
+
+			if( (chunk.size - chunk.previous_size) >= int64(NOTIFICATION_CHUNK)) {
+				chunk.previous_size = chunk.size
+				//send_progress_notification(subaru.dataId, chunk.size, chunk.progress)
+			}
+			
+			return true
+		}		
+
+		chunk := downloadChunk{fp: tmpfile, previous_size: 0, size: 0, subaru: subaru, gzip: false}
+		
 		easy.Setopt(curl.OPT_WRITEFUNCTION, writeFile)
-		easy.Setopt(curl.OPT_WRITEDATA, tmpfile)
+		easy.Setopt(curl.OPT_WRITEDATA, &chunk)
+
+		easy.Setopt(curl.OPT_HEADERFUNCTION, header_callback)
+		easy.Setopt(curl.OPT_HEADERDATA, &chunk)		
 
 		if err := easy.Perform(); err != nil {
-			fmt.Printf("ERROR: %v\n", err)
+			fmt.Printf("ERROR: %+v\n", err)
 			panic(err)
 		} else {
-			os.Rename(filename+".tmp", filename)
-			
-			fitsfile, err := os.Open(filename)
-			defer fitsfile.Close()
+			fmt.Println("len(chunk.buf):", chunk.buf.Len())
 
-			if(err != nil) {
-				panic(err)
+			if(int64(chunk.buf.Len()) != subaru.file_size) {
+				panic(errors.New("received wrong amount of data"))
 			}
+			
+			if(chunk.gzip) {				
+				gr, err := gzip.NewReader(&chunk.buf)
+				defer gr.Close()
 
-			readFITS(subaru, fitsfile)
+				if(err != nil) {
+					panic(err)
+				} else {
+					//read in all uncompressed data
+					buf, err := ioutil.ReadAll(gr)
+
+					if(err != nil) {
+						panic(err)
+					} else {
+						fmt.Println("uncompressed size:", len(buf))
+
+						go read_FITS_from_buffer(subaru, bytes.NewBuffer(buf))
+
+						// write a chunk to disk	
+						if _, err := tmpfile.Write(buf) ; err != nil {
+							panic(err)
+						}
+					}										
+				}
+			} else {								
+				go read_FITS_from_buffer(subaru, &chunk.buf)
+			}
+			
+			os.Rename(filename+".tmp", filename)						
 		}
 	} else {
-		readFITS(subaru, fitsfile)
+		read_FITS_from_file(subaru, fitsfile)
 	}
 }
 
@@ -371,13 +630,13 @@ func launch_subaru(dataId, votable string) SubaruDataset {
 		subaru.file_url_pos = -1
 		subaru.timestamp = time.Now()
 
-		subaru_votable(&subaru, votable)
-
-		go subaru_fits(&subaru)
+		subaru_votable(&subaru, votable)		
 		
 		datasets.Lock()
 		datasets.subaru[dataId] = subaru
 		datasets.Unlock()
+
+		go subaru_fits_thread(&subaru)
 
 		return subaru
 	} else {		
