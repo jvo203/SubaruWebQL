@@ -11,7 +11,7 @@ The other gripe with Go is the lack of OpenMP support.
 
 In the future the author might stop any further porting from C/C++ to Go and either stick with C/C++ or explore Rust. Rust seems to be closer to C/C++ than Go, and Rust seems to permit low-level memory manipulations.
 
-*AN UPDATE*
+###AN UPDATE
 
 Recently the author has been trying out Rust to see what is all the fuss with it. See the project below. The first impression of Rust is that it seems to be too strict. A *careful* programmer can write "safe" and crash-proof C/C++ code without losing time having to battle the Rust compiler.
 
