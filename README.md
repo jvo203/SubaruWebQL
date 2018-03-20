@@ -13,6 +13,6 @@ In the future the author might stop any further porting from C/C++ to Go and eit
 
 An update
 
-Recently the author has been trying out Rust to see what is all the fuss with it. See the project below. The first impression of Rust is that it seems to be too strict. A *careful* programmer can write "safe" and crash-proof C/C++ code without loosing time having to battle the Rust compiler.
+Recently the author has been trying out Rust to see what is all the fuss with it. See the project below. The first impression of Rust is that it seems to be too strict. A *careful* programmer can write "safe" and crash-proof C/C++ code without losing time having to battle the Rust compiler.
 
 https://github.com/jvo203/subaru_web_ql
