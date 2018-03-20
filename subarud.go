@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"encoding/binary"
 	"os"	
 	"io/ioutil"
 	"strings"
@@ -342,6 +343,26 @@ func subaru_votable(subaru *SubaruDataset, votable string) {
 	}
 }
 
+func read_FITS_bytes(buf []byte, offset int, dest []float32) {
+
+	fmt.Println("len(slice):", len(buf))
+	
+	pos := 0
+	n := len(buf) / 4
+	
+	for i:= 0; i < n; i++ {
+		floatBuf := buf[pos:pos+4]
+		bits := binary.BigEndian.Uint32(floatBuf)
+		float := math.Float32frombits(bits)
+		dest[offset+i] = float
+		pos += 4
+
+		if(i > n - 4) {
+			fmt.Println("bytes:", floatBuf, "float:", dest[offset+i])
+		}
+	}
+}
+
 func read_FITS_from_buffer(subaru *SubaruDataset, buffer *bytes.Buffer) {
 	fmt.Println("FITS buffer length:", buffer.Len())
 
@@ -444,9 +465,14 @@ func read_FITS_from_buffer(subaru *SubaruDataset, buffer *bytes.Buffer) {
 	
 	if(rem > 0) {
 		offset += FITS_HEADER_LENGTH
-	}
+		rem = offset - total
 
-	fmt.Println("FITS HEADER LENGTH:", offset, "total:", total, "rem:", rem)	
+		dummy := make([]byte, rem)
+		_, _ = buffer.Read(dummy)
+	}	
+
+	fmt.Println("FITS HEADER LENGTH:", offset, "total:", total, "rem:", rem)
+	fmt.Println("data size:", subaru.fits.width*subaru.fits.height*4)
 	fmt.Printf("%+v\n", subaru.fits)
 
 	if(subaru.fits.BITPIX != -32) {
@@ -455,17 +481,39 @@ func read_FITS_from_buffer(subaru *SubaruDataset, buffer *bytes.Buffer) {
 
 	//FITS DATA BEGINS AT buffer.Bytes()[offset:]
 	//need to convert from BIG-ENDIAN to LITTLE-ENDIAN and []byte to float32
-	src := buffer.Bytes()[offset:]
-	fmt.Println("data length:", len(src))
-	//there is something wrong here, data length is insufficient
+	src := buffer.Bytes()
+	fmt.Println("src buffer length:", len(src))	
 
 	//first read the remaining part of the FITS HEADER in one go
-
 	//then buffer.Bytes() will point to the remaining unread data (FITS DATA + padding)
-
 	//I can see how/why Go is not efficient in computing applications
-
 	//it might be better to stick with C/C++ or use Rust
+	//But after trying Rust a bit, Rust seems too strict, too convoluted
+	
+	total_size := subaru.fits.width*subaru.fits.height
+	subaru.fits.data = make([]float32, total_size)
+	
+	/*
+floatBuf := make([]byte, 4)//four bytes in float32
+for i := 0; i < total_size; i++ {
+		_, _ = buffer.Read(floatBuf)
+		bits := binary.BigEndian.Uint32(floatBuf)
+		float := math.Float32frombits(bits)
+		subaru.fits.data[i] = float
+
+		if(i > total_size - 10) {
+			fmt.Println("bytes:", floatBuf, "float:", float)
+		}
+	}*/
+
+	//take slices of src
+	//process them in parallel
+	//read_FITS_bytes(src, 0, subaru.fits.data)
+
+	go read_FITS_bytes(src[0:4*total_size/2], 0, subaru.fits.data)
+	go read_FITS_bytes(src[4*total_size/2:4*total_size], total_size/2, subaru.fits.data)	
+	
+	fmt.Println("subaru_fits_thread finished.")
 }
 
 func read_FITS_from_file(subaru *SubaruDataset, fp *os.File) {
