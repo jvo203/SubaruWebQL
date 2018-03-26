@@ -696,8 +696,9 @@ func launch_subaru(dataId, votable string) SubaruDataset {
 	}		
 }
 
-func execute_subaru(dataId, votable string) (bytes.Buffer, error) {
-	var buffer bytes.Buffer	
+func execute_subaru(dataId, votable string) (strings.Builder, error) {
+	//var buffer bytes.Buffer
+	var buffer strings.Builder
 	
 	if len(strings.TrimSpace(dataId)) > 0 {
 		/*buffer.WriteString("<h1>")		
